@@ -1,20 +1,15 @@
 {% set name = "tika" %}
-{% set version = "2.6.0" %}
-{% set compress_type = "tar.gz" %}
-{% set hash = "56670eb812944eb25ed73f1b3b075aa41e7a135b74b240822f28b819e5b373da" %}
+{% set version = "3.1.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.{{ compress_type }}
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ compress_type }}
-  sha256: {{ hash }}
+  url: https://github.com/chrismattmann/{{ name }}-python/archive/refs/tags/{{ version }}.tar.gz
+  sha256: ec234cbf5c192612cb50793ff2cd6b80c7be5f18688e6b19e4e1d2490e07630f
 
 build:
-  noarch: python
-  preserve_egg_dir: true
   entry_points:
     - tika-python = tika.tika:main
   number: 0
@@ -22,28 +17,38 @@ build:
 
 requirements:
   host:
-    - pip
     - python
-
+    - pip
   run:
     - python
     - setuptools
     - requests
 
 test:
+  source_files:
+    - tika/tests
   imports:
     - tika
     - tika.tests
-
+  requires:
+    - pip
+    - pytest
+    - pytest-benchmark >=3.2.2
   commands:
+    - pip check
     - tika-python --help
+    # All tests requier start Tika server: "RuntimeError: Unable to start Tika server."
+    # - pytest -v 
 
 about:
-  home: http://github.com/chrismattmann/tika-python
+  home: https://github.com/chrismattmann/tika-python
   license_file: LICENSE.txt
   license: Apache 2.0
   license_family: Apache
   summary: Apache Tika Python library
+  description: |
+    A Python port of the Apache Tika library that makes Tika available using the Tika REST Server.
+    This makes Apache Tika available as a Python library, installable via Setuptools, Pip and Easy Install.
   doc_url: https://github.com/chrismattmann/tika-python
   dev_url: https://github.com/chrismattmann/tika-python
 
