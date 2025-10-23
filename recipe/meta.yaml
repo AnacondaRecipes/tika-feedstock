@@ -13,7 +13,7 @@ build:
   entry_points:
     - tika-python = tika.tika:main
   number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vvv
 
 requirements:
   host:
@@ -43,7 +43,7 @@ test:
 about:
   home: https://github.com/chrismattmann/tika-python
   license_file: LICENSE.txt
-  license: Apache 2.0
+  license: Apache-2.0
   license_family: Apache
   summary: Apache Tika Python library
   description: |
