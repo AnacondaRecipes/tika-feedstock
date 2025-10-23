@@ -1,0 +1,13 @@
+diff --git a/tika/pdf.py b/tika/pdf.py
+index 128aab6..b5daec5 100644
+--- a/tika/pdf.py
++++ b/tika/pdf.py
+@@ -16,7 +16,7 @@
+ # limitations under the License.
+ #
+ 
+-import .tika.parser
++from tika import parser
+ from io import StringIO
+ from bs4 import BeautifulSoup
+ 

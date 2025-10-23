@@ -6,8 +6,16 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/chrismattmann/{{ name }}-python/archive/refs/tags/{{ version }}.tar.gz
-  sha256: ec234cbf5c192612cb50793ff2cd6b80c7be5f18688e6b19e4e1d2490e07630f
+  - url: https://github.com/chrismattmann/{{ name }}-python/archive/refs/tags/{{ version }}.tar.gz
+    sha256: ec234cbf5c192612cb50793ff2cd6b80c7be5f18688e6b19e4e1d2490e07630f
+    patches:
+      - patches/fix_test.patch
+  - url: https://repo1.maven.org/maven2/org/apache/tika/tika-server-standard/3.2.3/tika-server-standard-3.2.3.jar
+    sha256: c00898065af088925ba4b65856db66e6140e4c750d28219b61b96885885e7593
+    folder: tika-server
+  - url: https://repo1.maven.org/maven2/org/apache/tika/tika-server-standard/3.2.3/tika-server-standard-3.2.3.jar.md5
+    sha256: 99faa3e86de7dc38b99791bd2ae43e2a04bdc386b20285a759f6b9f4e465e9bc
+    folder: tika-server
 
 build:
   entry_points:
@@ -24,9 +32,15 @@ requirements:
     - setuptools
     - requests
 
+# External URL blocked by Wikimedia (403 Forbidden)
+{% set deselected_tests = [
+  "--deselect=tika/tests/test_ssl_link.py::CreateTest::test_url",
+  "--deselect=tika/tests/test_tika.py::CreateTest::test_remote_jpg"
+]%}
 test:
   source_files:
     - tika/tests
+    - tika-server
   imports:
     - tika
     - tika.tests
@@ -34,11 +48,13 @@ test:
     - pip
     - pytest
     - pytest-benchmark >=3.2.2
+    - openjdk
   commands:
     - pip check
     - tika-python --help
-    # All tests requier start Tika server: "RuntimeError: Unable to start Tika server."
-    # - pytest -v 
+    - export TIKA_SERVER_JAR=file://${SRC_DIR}/tika-server/tika-server-standard-3.2.3.jar # [not win]
+    - set TIKA_SERVER_JAR=file://${SRC_DIR}/tika-server/tika-server-standard-3.2.3.jar # [win]
+    - pytest -v {{ deselected_tests | join(" ")}}
 
 about:
   home: https://github.com/chrismattmann/tika-python
