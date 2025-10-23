@@ -35,7 +35,8 @@ requirements:
 # External URL blocked by Wikimedia (403 Forbidden)
 {% set deselected_tests = [
   "--deselect=tika/tests/test_ssl_link.py::CreateTest::test_url",
-  "--deselect=tika/tests/test_tika.py::CreateTest::test_remote_jpg"
+  "--deselect=tika/tests/test_tika.py::CreateTest::test_remote_jpg",
+  "--deselect=tika/tests/test_tika.py::CreateTest::test_remote_html"
 ]%}
 test:
   source_files:
@@ -53,7 +54,7 @@ test:
     - pip check
     - tika-python --help
     - export TIKA_SERVER_JAR=file://${SRC_DIR}/tika-server/tika-server-standard-3.2.3.jar # [not win]
-    - set TIKA_SERVER_JAR=file://${SRC_DIR}/tika-server/tika-server-standard-3.2.3.jar # [win]
+    - set TIKA_SERVER_JAR=file:///%SRC_DIR:\=/%\tika-server\tika-server-standard-3.2.3.jar # [win]
     - pytest -v {{ deselected_tests | join(" ")}}
 
 about:
