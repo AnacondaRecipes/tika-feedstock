@@ -10,12 +10,6 @@ source:
     sha256: ec234cbf5c192612cb50793ff2cd6b80c7be5f18688e6b19e4e1d2490e07630f
     patches:
       - patches/fix_test.patch
-  - url: https://repo1.maven.org/maven2/org/apache/tika/tika-server-standard/3.1.0/tika-server-standard-3.1.0.jar
-    sha256: 9e975f14abc005c5bec38494493b6abcfa5496d73b285fb78c3b3d6a4ae157a6
-    folder: tika-server
-  - url: https://repo1.maven.org/maven2/org/apache/tika/tika-server-standard/3.1.0/tika-server-standard-3.1.0.jar.md5
-    sha256: e58cb2b9762fc664ae214388a2594c6a848081c5f4586287ed425b0686108645
-    folder: tika-server
 
 build:
   entry_points:
@@ -40,7 +34,6 @@ requirements:
 test:
   source_files:
     - tika/tests
-    - tika-server
   imports:
     - tika
     - tika.tests
@@ -52,8 +45,6 @@ test:
   commands:
     - pip check
     - tika-python --help
-    # - export TIKA_SERVER_JAR=file://${SRC_DIR}/tika-server/tika-server-standard-3.1.0.jar # [not win]
-    # - set TIKA_SERVER_JAR=file:///%SRC_DIR:\=/%\tika-server\tika-server-standard-3.1.0.jar # [win]
     - pytest -v {{ deselected_tests | join(" ")}}
 
 about:
